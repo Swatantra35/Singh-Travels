@@ -923,6 +923,57 @@ section.section {
   color: var(--gold-dark);
 }
 
+/* Fleet Card Buttons Visibility */
+.fleet-card .btn,
+.card-action-btn {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s var(--ease);
+}
+
+.fleet-card .btn-gold {
+  background: var(--gold);
+  color: var(--navy-deep);
+  border: 1.5px solid var(--gold);
+}
+.fleet-card .btn-gold:hover {
+  background: var(--gold-dark);
+  color: var(--white);
+  border-color: var(--gold-dark);
+  transform: translateY(-2px);
+}
+
+.fleet-card .btn-navy {
+  background: var(--navy-deep);
+  color: var(--gold-light);
+  border: 1.5px solid var(--navy-deep);
+}
+.fleet-card .btn-navy:hover {
+  background: var(--navy-light);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.fleet-card .btn-outline {
+  background: var(--navy-deep);
+  color: var(--gold-light);
+  border: 1.5px solid var(--navy-deep);
+}
+.fleet-card .btn-outline:hover {
+  background: var(--gold);
+  color: var(--navy-deep);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
 /* =========================================================
    PACKAGES
 ========================================================= */
