@@ -239,7 +239,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const name = nameEl ? nameEl.value.trim() : "";
       const phone = phoneEl ? phoneEl.value.trim() : "";
       const pickup = pickupEl ? pickupEl.value.trim() : "Varanasi";
-      const destination = destinationEl ? destinationEl.value.trim() : "Local / Outstation";
+      const destination = destinationEl
+        ? destinationEl.value.trim()
+        : "Local / Outstation";
       const date = dateEl ? dateEl.value : "As soon as possible";
       const car = carTypeEl ? carTypeEl.value : "Any Car";
 
@@ -264,7 +266,9 @@ document.addEventListener("DOMContentLoaded", () => {
 📅 *Travel Date:* ${date}
 🚗 *Vehicle Chosen:* ${car}`;
 
-      const waUrl = "https://api.whatsapp.com/send?phone=918960942111&text=" + encodeURIComponent(whatsappText);
+      const waUrl =
+        "https://api.whatsapp.com/send?phone=918960942111&text=" +
+        encodeURIComponent(whatsappText);
 
       // Open WhatsApp directly
       window.location.href = waUrl;
@@ -292,12 +296,129 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  topBtn.addEventListener("click", () => {
-    window.scrollTo({
-      top: 0,
+  // ==========================
+  // Gallery Filter Tabs
+  // ==========================
 
-      behavior: "smooth",
+  const filterBtns = document.querySelectorAll(".gallery-filter-btn");
+  const galleryItems = document.querySelectorAll(".gallery-item");
+
+  if (filterBtns.length > 0) {
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterBtns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const filter = btn.getAttribute("data-filter");
+
+        galleryItems.forEach((item) => {
+          const cat = item.getAttribute("data-category");
+          if (filter === "all" || cat === filter) {
+            item.classList.remove("hidden");
+          } else {
+            item.classList.add("hidden");
+          }
+        });
+      });
     });
+  }
+
+  // ==========================
+  // Lightbox Modal Viewer
+  // ==========================
+
+  const modal = document.getElementById("lightboxModal");
+  const modalImg = document.getElementById("lightboxImg");
+  const modalCaption = document.getElementById("lightboxCaption");
+  const modalClose = document.getElementById("lightboxClose");
+  const modalBackdrop = document.getElementById("lightboxBackdrop");
+  const modalPrev = document.getElementById("lightboxPrev");
+  const modalNext = document.getElementById("lightboxNext");
+
+  let lightboxItems = [];
+  let currentIndex = 0;
+
+  function updateLightboxList() {
+    lightboxItems = Array.from(
+      document.querySelectorAll(".lightbox-trigger:not(.hidden)")
+    ).map((el) => ({
+      src: el.getAttribute("data-lightbox") || el.querySelector("img")?.src,
+      caption: el.getAttribute("data-caption") || el.querySelector("img")?.alt || "",
+    }));
+  }
+
+  function openLightbox(src, caption) {
+    updateLightboxList();
+
+    const idx = lightboxItems.findIndex((item) => item.src === src);
+    if (idx !== -1) {
+      currentIndex = idx;
+    } else {
+      currentIndex = 0;
+    }
+
+    showLightboxItem(currentIndex);
+    if (modal) {
+      modal.classList.add("active");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function showLightboxItem(index) {
+    if (!lightboxItems || lightboxItems.length === 0) return;
+    if (index < 0) index = lightboxItems.length - 1;
+    if (index >= lightboxItems.length) index = 0;
+    currentIndex = index;
+
+    const item = lightboxItems[currentIndex];
+    if (modalImg) {
+      modalImg.src = item.src;
+    }
+    if (modalCaption) {
+      modalCaption.textContent = item.caption;
+    }
+  }
+
+  function closeLightbox() {
+    if (modal) {
+      modal.classList.remove("active");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+  }
+
+  // Attach click events to all lightbox trigger elements
+  document.addEventListener("click", (e) => {
+    const trigger = e.target.closest(".lightbox-trigger");
+    if (trigger) {
+      e.preventDefault();
+      const src = trigger.getAttribute("data-lightbox") || trigger.querySelector("img")?.src;
+      const caption = trigger.getAttribute("data-caption") || trigger.querySelector("img")?.alt || "";
+      openLightbox(src, caption);
+    }
+  });
+
+  if (modalClose) modalClose.addEventListener("click", closeLightbox);
+  if (modalBackdrop) modalBackdrop.addEventListener("click", closeLightbox);
+
+  if (modalPrev) {
+    modalPrev.addEventListener("click", () => {
+      showLightboxItem(currentIndex - 1);
+    });
+  }
+
+  if (modalNext) {
+    modalNext.addEventListener("click", () => {
+      showLightboxItem(currentIndex + 1);
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (!modal || !modal.classList.contains("active")) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") showLightboxItem(currentIndex - 1);
+    if (e.key === "ArrowRight") showLightboxItem(currentIndex + 1);
   });
 });
 // window.addEventListener("load", () => {
