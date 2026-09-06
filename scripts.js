@@ -288,13 +288,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const topBtn = document.getElementById("backToTop");
 
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 500) {
-      topBtn.classList.add("show");
-    } else {
-      topBtn.classList.remove("show");
-    }
-  });
+  if (topBtn) {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        topBtn.classList.add("show");
+      } else {
+        topBtn.classList.remove("show");
+      }
+    });
+
+    topBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  }
 
   // ==========================
   // Gallery Filter Tabs
